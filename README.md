@@ -1,9 +1,15 @@
 # TicTacToe
 Makes it possible to locally play TicTacToe within a terminal.
 
+Changelog:
+[+]: Draw check
+[+]: Bugfixes
+[+]: Cleaner code
+[+]: Allows users to pick their symbols
+[+]: Allows users to pick usernames
+[+]: Allows users to decide who starts
+
 TODO:
-- Check for DRAW
-- Check for Winner
-- Fix bug that causes a loop when selecting line & column
+- Winner check not complete yet
 
 
