@@ -1,31 +1,26 @@
 public class GameConsole {
 
     /*
-    Method that prints a successful start message on startup.
+    The following methods outputs a successful startup message.
     */
+
     public void onEnable(){
-        System.out.println("Game start successful.");
-        System.out.println();
-
+        System.out.println("The game started successfully.");
     }
 
     /*
-    Method that prints a successful shut down message on shutdown.
-    */
-
-    public void onDisable(){
-        System.out.println();
-        System.out.println("Game shut down successful.");
-
-    }
-
-
-    /*
-    Method to print a message into the terminal.
+    The following method outputs a message (notifications, gameupdates etc.).
     */
 
     public void print(String msg){
         System.out.println(msg);
-        System.out.println();
+    }
+
+    /*
+    The following method outputs a successful shut down message.
+    */
+
+    public void onDisable(){
+        System.out.println("The game shut down successfully.\n");
     }
 }

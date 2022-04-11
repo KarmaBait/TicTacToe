@@ -1,124 +1,154 @@
 import java.util.Scanner;
 public class TicTacToe {
-    private static Scanner scan = new Scanner(System.in);
-    private static GameConsole console = new GameConsole();
-    private static MatchField matchField = new MatchField();
-    private static Player playerOne = new Player();
-    private static Player playerTwo = new Player();
-
+    private static final Scanner scan = new Scanner(System.in);
+    private static final GameConsole console = new GameConsole();
+    private static final MatchField matchField = new MatchField();
+    private static final Player playerOne = new Player();
+    private static final Player playerTwo = new Player();
     public static void main(String[] args) {
 
-
-         /*
-         The following code contains the actual game process
-         E.g.: Console outputs, methods etc.
-         */
+        /*
+        The following code includes all important methods to keep the game running.
+        */
 
         console.onEnable();
 
-        //Asks both users for their usernames & sets them.
+        /*
+        The following code asks the players to enter a username, symbol and to decide on who starts the game.
+        */
+
         playerOne.setUsername();
-        console.print("Player1: " + playerOne.getUsername());
         playerTwo.setUsername();
-        console.print("Player2: " + playerTwo.getUsername());
 
-        //Asks both users for their preferred symbol.
         playerOne.setPlayerSymbol();
-        console.print(playerOne.getUsername() + " chose " + playerOne.getPlayerSymbol());
         playerTwo.setPlayerSymbol();
-        console.print(playerTwo.getUsername() + " chose " + playerTwo.getPlayerSymbol());
 
-        //Asks both users about who should start the game.
-        decideWhoStarts();
+        //checks if the same symbol was used twice (=invalid). Only allows two different symbols.
+        while (playerOne.getPlayerSymbol() == playerTwo.getPlayerSymbol()) {
+            console.print(playerTwo.getUsername() + ", the symbol you were trying to use has already been taken.");
+            playerTwo.setPlayerSymbol();
+        }
+        //Calls the method to pick who starts the game
+        pickWhoStarts();
 
         //Initializes and displays the empty match field.
         matchField.initializeMatchField();
         matchField.displayMatchField();
 
-        //While game is not over the game will do this:
-        matchField.setGameOverManually(false);
-        while (matchField.getGameOver() != true){
-            //If player one is allowed to play (if it's their turn) the game will do this:
-            if (playerOne.getAllowedToPlay() == true){
-                playerOne.selectLine();
+
+        //As long as the game isn't over players will be able to play and select fields.
+        while (!matchField.getGameOver()) {
+            if (playerOne.getAllowedToPlay()) {
+                playerOne.selectRow();
                 playerOne.selectColumn();
-                matchField.checkFieldFull(playerOne.getSelectedLine(), playerOne.getSelectedColumn());
+                matchField.checkFieldBlocked(playerOne.getSelectedRow(), playerOne.getSelectedColumn());
 
-                while (matchField.getFieldFull() != false) {
+                while (matchField.getFieldBlocked()) {
+                    console.print(playerOne.getUsername() + ", the field you were trying to use is already blocked.\n" +
+                            "please select a different field.");
+                    playerOne.selectRow();
+                    playerOne.selectColumn();
+                    matchField.checkFieldBlocked(playerOne.getSelectedRow(), playerOne.getSelectedColumn());
+                }
 
-                    if (matchField.getFieldFull() == true) {
-                        console.print(playerOne.getUsername() + ", the field you are trying to use is already blocked.\n" +
-                                                                " please select a different field.");
-
-                    } else {
-                        matchField.fillField(playerOne.getSelectedLine(), playerOne.getSelectedColumn(), playerOne.getPlayerSymbol());
+                if (!matchField.getFieldBlocked()) {
+                    matchField.fillField(playerOne.getSelectedRow(), playerOne.getSelectedColumn(), playerOne.getPlayerSymbol());
+                    matchField.checkForWinner();
+                    if(matchField.getWinnerAvailable()){
                         matchField.displayMatchField();
+                        console.print(playerOne.getUsername() + " has won the game.");
+                        console.print("Game shutting down..");
+                        console.onDisable();
+                        matchField.setGameOver(true);
+                    }
+                    matchField.checkForTie();
 
+                    if (matchField.getTie()) {
+                        console.print("The game ends with a tie.");
+                        console.print("Game shutting down..");
+                        console.onDisable();
+                        matchField.setGameOver(true);
+                    } else {
+                        matchField.displayMatchField();
+                        console.print("\n" + playerOne.getUsername() + " finished their turn.");
+                        console.print("\nIt is now " + playerTwo.getUsername() + "s turn.");
                         playerOne.setAllowedToPlay(false);
                         playerTwo.setAllowedToPlay(true);
-
                     }
                 }
             } else {
-                playerTwo.selectLine();
+                playerTwo.selectRow();
                 playerTwo.selectColumn();
-                matchField.checkFieldFull(playerTwo.getSelectedLine(), playerTwo.getSelectedColumn());
+                matchField.checkFieldBlocked(playerTwo.getSelectedRow(), playerTwo.getSelectedColumn());
 
-                while (matchField.getFieldFull() != false) {
+                while (matchField.getFieldBlocked()) {
+                    console.print(playerTwo.getUsername() + ", the field you were trying to use is already blocked.\n" +
+                            "Please select a different field.");
+                    playerTwo.selectRow();
+                    playerTwo.selectColumn();
+                    matchField.checkFieldBlocked(playerTwo.getSelectedRow(), playerTwo.getSelectedColumn());
+                }
 
-                    if (matchField.getFieldFull() == true) {
-                        console.print(playerTwo.getUsername() + ", the field you are trying to use is already blocked.\n" +
-                                " please select a different field.");
-
-                    } else {
-                        matchField.fillField(playerTwo.getSelectedLine(), playerTwo.getSelectedColumn(), playerTwo.getPlayerSymbol());
+                if (!matchField.getFieldBlocked()) {
+                    matchField.fillField(playerTwo.getSelectedRow(), playerTwo.getSelectedColumn(), playerTwo.getPlayerSymbol());
+                    matchField.checkForWinner();
+                    if(matchField.getWinnerAvailable()){
                         matchField.displayMatchField();
+                        console.print(playerTwo.getUsername() + " has won the game.");
+                        console.print("Game shutting down..");
+                        console.onDisable();
+                        matchField.setGameOver(true);
+                    }
 
-                        playerOne.setAllowedToPlay(true);
+                    matchField.checkForTie();
+
+                    if (matchField.getTie()){
+                        console.print("The game ends with a tie.");
+                        console.print("Game shutting down..");
+                        console.onDisable();
+                        matchField.setGameOver(true);
+                    } else {
+                        matchField.displayMatchField();
+                        console.print("\n" + playerTwo.getUsername() + " finished their turn.");
+                        console.print("\nIt is now " + playerOne.getUsername() + "s turn.");
                         playerTwo.setAllowedToPlay(false);
-
+                        playerOne.setAllowedToPlay(true);
                     }
                 }
             }
         }
-        console.onDisable();
-
     }
 
     /*
-    The following method makes the users pick the game starting player.
+    The following method allows the players to pick who starts. It also makes sure that no invalid input will be accepted.
     */
-
-    public static void decideWhoStarts() {
-        boolean isValid = false;
-
-        while (isValid != true)  {
-
-            System.out.println("Please decide on who should start the game.");
-            System.out.println("Enter '1' if you want " + playerOne.getUsername() + " to start the game.");
-            System.out.println("Enter '2' if you want " + playerTwo.getUsername() + " to start the game.");
-
-            int whoStarts = scan.nextInt();
-
-            //If the users enter '1' as game starter, player1 will start.
-            if (whoStarts == 1) {
-                playerOne.setAllowedToPlay(true);
-                playerTwo.setAllowedToPlay(false);
-                console.print("Player " + playerOne.getUsername() + " starts the game.");
-                isValid = true;
-
-            //If the users enter '2' as game starter, player2 will start.
-            } else if (whoStarts == 2) {
-                playerOne.setAllowedToPlay(false);
-                playerTwo.setAllowedToPlay(true);
-                console.print("Player " + playerTwo.getUsername() + " starts the game.");
-                isValid = true;
-
-            //If an invalid player number is given they'll be asked to enter a valid one.
-            } else {
-                System.out.println("The given input was invalid. Please select either '1' or '2'.");
-                System.out.println();
-
+    public static void pickWhoStarts(){
+        boolean isInputValid = false;
+        int selection;
+        //Asks for input until a valid input has been given.
+        while(!isInputValid){
+            console.print("Please enter either '1' " + playerOne.getUsername() + " or '2' " + playerTwo.getUsername() +
+                          " to decide who starts.");
+            selection = scan.nextInt();
+            //If input = 1, player 1 will start and is set to true.
+            switch(selection){
+                case 1:
+                    isInputValid = true;
+                    console.print(playerOne.getUsername() + " will start the game.\n");
+                    playerOne.setAllowedToPlay(true);
+                    playerTwo.setAllowedToPlay(false);
+                    break;
+                //If input = 2, player 2 will start and is set to true.
+                case 2:
+                    isInputValid = true;
+                    console.print(playerTwo.getUsername() + " will start the game.\n");
+                    playerOne.setAllowedToPlay(false);
+                    playerTwo.setAllowedToPlay(true);
+                    break;
+                //If input invalid, the user will be sent an error message and they'll be asked to enter a correct input.
+                default:
+                    console.print("The given input was incorrect. Please enter either '1' or '2'.");
+                    break;
             }
         }
     }

@@ -1,89 +1,112 @@
 public class MatchField {
     private final int XSIZE = 3;
     private final int YSIZE = 3;
-    private boolean isMatchFieldFull;
-    private boolean isFieldFull;
+    private boolean isFieldBlocked = false;
+    private boolean isTie;
+    private boolean isWinnerAvailable;
     private boolean isGameOver;
 
-    //Builds two dimensional array
-    private char[][] matchField = new char [XSIZE][YSIZE];
+    private char [][] matchField = new char[XSIZE][YSIZE];
 
     /*
-    The following method displays the match field within the terminal.
+    The following code contains important methods that are used for the game.
     */
 
-    public void displayMatchField(){
-        for (int line = 0; line < XSIZE; line++){
-            for (int column = 0; column < YSIZE; column++){
-                System.out.print("[" + matchField[line][column] + "]");
+    //The method runs through the matchField array and sets all values to ' ' (clearing the field).
+    public void initializeMatchField(){
+        for (int i = 0; i < XSIZE; i++){
+            for (int e = 0; e < YSIZE; e++){
+                matchField[i][e] = ' ';
+            }
+        }
+    }
 
-                //Prints a new line once the third box is printed.
-                if (column == YSIZE-1){
+    //The method runs through the matchField array and displays a 3x3 grid (including the updated values)
+    public void displayMatchField(){
+        for (int i = 0; i < XSIZE; i++){
+            for (int e = 0; e < YSIZE; e++){
+                System.out.print("[" + matchField[i][e] + "]");
+                if (e == YSIZE-1){
                     System.out.println();
                 }
             }
         }
     }
 
-    /*
-    The following method initializes the match field and empties all fields.
-    */
+    //The method checks if the selected field is already blocked.
+    public void checkFieldBlocked(int xcord, int ycord){
+        if (matchField[xcord-1][ycord-1] == ' '){
+            isFieldBlocked = false;
+        } else {
+            isFieldBlocked = true;
+        }
+    }
 
-    public void initializeMatchField(){
-        for (int line = 0; line < XSIZE; line++){
-            for (int column = 0; column < YSIZE; column++){
-                matchField[line][column] = ' ';
+    //The method prints the input into the selected field of the match field
+    public void fillField(int xcord, int ycord, char symbol){
+       matchField[xcord-1][ycord-1] = symbol;
+    }
 
+
+    //The method runs through all fields and checks if they've all been used = tie.
+    public void checkForTie(){
+        boolean tieGame = true;
+        for (int i = 0; i < XSIZE; i++){
+            for (int e = 0; e < YSIZE; e++){
+                if (matchField[i][e] == ' ') {
+                    tieGame = false;
+                }
+            }
+        }
+        if (tieGame){
+            isTie = true;
+        } else {
+            isTie = false;
+        }
+    }
+
+    public void checkForWinner(){
+        for (int i = 0; i < XSIZE; i++){
+            if ((matchField[i][0] == matchField[i][1]) && (matchField[i][0] == matchField[i][2]) && (matchField[i][0] != ' ')){
+                isWinnerAvailable = true;
+                System.out.println("The game has ended.");
+            } else if((matchField[0][i] == matchField[1][i]) && (matchField[i][0] == matchField[2][i]) && (matchField[0][i] != ' ')){
+                isWinnerAvailable = true;
+                System.out.println("The game has ended.");
+            } else if((matchField[0][0] == matchField[1][1]) && (matchField[0][0] == matchField[2][2]) && (matchField[0][0] != ' ')){
+                isWinnerAvailable = true;
+                System.out.println("The game has ended.");
+            } else if((matchField[1][2] == matchField[1][1]) && (matchField[1][2] == matchField[2][1]) && (matchField[1][2] != ' ')){
+                isWinnerAvailable = true;
+                System.out.println("The game has ended.");
+            } else {
+                isWinnerAvailable = false;
             }
         }
     }
 
 
     /*
-    The following method fills a selected field.
+    The following code contains getters and setters for the given variables
     */
 
-    public void fillField(int xcord, int ycord, char symbol){
-        matchField[xcord-1][ycord-1] = symbol;
-
-    }
-
-    public void setMatchFieldFull(){
-
-    }
-
-    public boolean getMatchFieldFull(){
-        return isMatchFieldFull;
-
-    }
-
-    public void checkFieldFull(int xcord, int ycord){
-        if (matchField[xcord][ycord] == ' '){
-            isFieldFull = false;
-
-        } else {
-            isFieldFull = true;
-
-        }
-    }
-
-    public boolean getFieldFull(){
-        return isFieldFull;
-
-    }
-
-    public void setGameOver(){
-
-
-    }
-
-    public void setGameOverManually(boolean status){
+    public void setGameOver(boolean status){
         isGameOver = status;
-
     }
 
     public boolean getGameOver(){
         return isGameOver;
+    }
 
+    public boolean getFieldBlocked(){
+        return isFieldBlocked;
+    }
+
+    public boolean getTie(){
+        return isTie;
+    }
+
+    public boolean getWinnerAvailable(){
+        return isWinnerAvailable;
     }
 }
