@@ -54,13 +54,6 @@ public class TicTacToe {
                 if (!matchField.getFieldBlocked()) {
                     matchField.fillField(playerOne.getSelectedRow(), playerOne.getSelectedColumn(), playerOne.getPlayerSymbol());
                     matchField.checkForWinner();
-                    if(matchField.getWinnerAvailable()){
-                        matchField.displayMatchField();
-                        console.print(playerOne.getUsername() + " has won the game.");
-                        console.print("Game shutting down..");
-                        console.onDisable();
-                        matchField.setGameOver(true);
-                    }
                     matchField.checkForTie();
 
                     if (matchField.getTie()) {

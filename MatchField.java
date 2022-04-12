@@ -7,6 +7,7 @@ public class MatchField {
     private boolean isGameOver;
 
     private char [][] matchField = new char[XSIZE][YSIZE];
+    private GameConsole console = new GameConsole();
 
     /*
     The following code contains important methods that are used for the game.
@@ -68,17 +69,21 @@ public class MatchField {
     public void checkForWinner(){
         for (int i = 0; i < XSIZE; i++){
             if ((matchField[i][0] == matchField[i][1]) && (matchField[i][0] == matchField[i][2]) && (matchField[i][0] != ' ')){
-                isWinnerAvailable = true;
                 System.out.println("The game has ended.");
+                console.onDisable();
+                isGameOver = true;
             } else if((matchField[0][i] == matchField[1][i]) && (matchField[i][0] == matchField[2][i]) && (matchField[0][i] != ' ')){
-                isWinnerAvailable = true;
                 System.out.println("The game has ended.");
+                console.onDisable();
+                isGameOver = true;
             } else if((matchField[0][0] == matchField[1][1]) && (matchField[0][0] == matchField[2][2]) && (matchField[0][0] != ' ')){
-                isWinnerAvailable = true;
                 System.out.println("The game has ended.");
+                console.onDisable();
+                isGameOver = true;
             } else if((matchField[1][2] == matchField[1][1]) && (matchField[1][2] == matchField[2][1]) && (matchField[1][2] != ' ')){
-                isWinnerAvailable = true;
                 System.out.println("The game has ended.");
+                console.onDisable();
+                isGameOver = true;
             } else {
                 isWinnerAvailable = false;
             }
